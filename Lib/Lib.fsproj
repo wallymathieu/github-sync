@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Diff.fs" />
+    <Compile Include="Library.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FSharp.Data" Version="3.3.1" />
+    <PackageReference Include="FSharpPlus" Version="1.1.0-RC1" />
+    <PackageReference Include="Ply" Version="0.1.5" />
+    <PackageReference Include="Fake.Core.Process" Version="5.19.0" />
+    <PackageReference Include="System.Collections.Immutable" Version="1.7.0" />
+    <PackageReference Include="Fleece.NewtonsoftJson" Version="0.8.0-alpha-3" />
+  </ItemGroup>
+
+</Project>
