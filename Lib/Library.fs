@@ -13,25 +13,29 @@ open System.IO
 module Git=
   open Fake.Core
   let clone dir sshUrl =
-    use stdOut = new MemoryStream()
-    RawCommand( "git", Arguments.OfArgs ["clone"; sshUrl])
-    |> CreateProcess.fromCommand 
-    |> CreateProcess.withWorkingDirectory dir
-    |> CreateProcess.withTimeout (TimeSpan.FromMinutes 2.)
-    |> CreateProcess.ensureExitCode
-    |> CreateProcess.withStandardOutput (UseStream (true, stdOut))
-    |> Proc.run
-    |> ignore
+    try
+      use stdOut = new MemoryStream()
+      RawCommand( "git", Arguments.OfArgs ["clone"; sshUrl])
+      |> CreateProcess.fromCommand 
+      |> CreateProcess.withWorkingDirectory dir
+      |> CreateProcess.withTimeout (TimeSpan.FromMinutes 2.)
+      |> CreateProcess.ensureExitCode
+      |> CreateProcess.withStandardOutput (UseStream (true, stdOut))
+      |> Proc.run
+      |> ignore
+    with e -> raise <| Exception ("Failed to clone "+dir,e)
   let pull dir=
-    use stdOut = new MemoryStream()
-    RawCommand( "git", Arguments.OfArgs ["pull"])
-    |> CreateProcess.fromCommand 
-    |> CreateProcess.withWorkingDirectory dir
-    |> CreateProcess.withTimeout (TimeSpan.FromMinutes 2.)
-    |> CreateProcess.ensureExitCode
-    |> CreateProcess.withStandardOutput (UseStream (true, stdOut))
-    |> Proc.run
-    |> ignore
+    try
+      use stdOut = new MemoryStream()
+      RawCommand( "git", Arguments.OfArgs ["pull"])
+      |> CreateProcess.fromCommand 
+      |> CreateProcess.withWorkingDirectory dir
+      |> CreateProcess.withTimeout (TimeSpan.FromMinutes 2.)
+      |> CreateProcess.ensureExitCode
+      |> CreateProcess.withStandardOutput (UseStream (true, stdOut))
+      |> Proc.run
+      |> ignore
+    with e -> raise <| Exception ("Failed to pull "+dir,e)
 
 type UserType=
   |User
