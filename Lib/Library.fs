@@ -48,10 +48,11 @@ module GitHub=
   type Repositories= JsonProvider<"../Lib/repositories.json">
   let inline getSshUrl(r:^a) = ( ^a : ( member get_SshUrl: unit->string ) (r) )
   let inline getName(r:^a) = ( ^a : ( member get_Name: unit->string ) (r) )
+  let inline getFork(r:^a) = ( ^a : ( member get_Fork: unit->bool ) (r) )
   let fetchRepos (auth:Auth) { Username=name; UserType=typ }= 
     let res=
       Http.RequestString
-        ( sprintf "https://api.github.com/%s/%s/repos?per_page=200" (typeToString typ) name, 
+        ( sprintf "https://api.github.com/%s/%s/repos?per_page=300" (typeToString typ) name, 
           headers = 
             match auth with | NoAuth->[] | Basic (u,t)->[BasicAuth u t] 
             @ [ Accept HttpContentTypes.Json; UserAgent "github-sync" ] 
@@ -61,7 +62,7 @@ module GitHub=
   open Diff
   let syncDir (auth:Auth) (u:User) (dir:string) =
     let dirs = Directory.EnumerateDirectories(dir) |> List.ofSeq
-    let repos = fetchRepos auth u |> List.ofArray
+    let repos = fetchRepos auth u |> List.ofArray |> List.filter (not << getFork)
     let directoryName d=DirectoryInfo(d).Name
     let { Right = right; Left = _;Both = i}= diff directoryName dirs getName repos
     for toClone in right do
